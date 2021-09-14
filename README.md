@@ -3,20 +3,17 @@
 <a href=""><img src="https://github.com/bfollington/use-input/raw/main/banner.png" /></a>
 <br />
 
-<p align="center">
-  <a href="https://github.com/bfollington/use-input/actions?query=workflow%3A%22Build%22"><img alt="Build" src="https://github.com/bfollington/use-input/workflows/Build/badge.svg"></a>
-<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/bfollington/use-input">
-<img alt="GitHub" src="https://img.shields.io/github/license/bfollington/use-input">
+[![Version](https://img.shields.io/npm/v/@twopm/use-input?style=flat&colorA=000000&colorB=000000)](https://npmjs.com/package/@twopm/use-input)
+[![Twitter](https://img.shields.io/twitter/follow/vivavolt?label=%40vivavolt&style=flat&colorA=000000&colorB=000000&logo=twitter&logoColor=000000)](https://twitter.com/vivavolt)
+[![ETH](https://img.shields.io/badge/ETH-f5f5f5?style=flat&colorA=000000&colorB=000000)](https://blockchain.com/eth/address/0x981e493b795A7a28c43Bf8d7a8E125C419435Fa7)
+![Language](https://img.shields.io/github/languages/top/bfollington/use-input?style=flat&colorA=000000&colorB=000000)
+![License](https://img.shields.io/github/license/bfollington/use-input?style=flat&colorA=000000&colorB=000000)
+![Bundle Size](https://img.shields.io/bundlephobia/min/@twopm/use-input?style=flat&colorA=000000&colorB=000000)
+[![Build](https://github.com/bfollington/use-input/workflows/Build/badge.svg)](https://github.com/bfollington/use-input/actions?query=workflow%3A%22Build%22)
 
-<br>
-  <img alt="npm" src="https://img.shields.io/npm/v/@twopm/use-input">
-<img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/@twopm/use-input">
-
-</p><br>
-
-<p align="center"><strong>use-input</strong> is an elegant, typesafe input management system for React supporting keyboard, mouse and gamepad (soon).</p>
+<p><strong>use-input</strong> is an elegant, typesafe input management system for React supporting keyboard, mouse and gamepad (soon).</p>
   
-<p align="center"><a href="https://use-input.vercel.app/">👁 &nbsp;Live Demo</a><br> (source in <code>packages/example</code>)</p>
+<p><a href="https://use-input.vercel.app/">👁 &nbsp;Live Demo</a> (source in <code>packages/example</code>)</p>
 
 # Example
 

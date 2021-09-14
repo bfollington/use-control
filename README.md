@@ -1,6 +1,6 @@
 
 
-<a href=""><img src="https://raw.githubusercontent.com/bfollington/use-input/main/banner.png" /></a>
+<a href=""><img src="https://github.com/bfollington/use-input/raw/main/banner.png" /></a>
 <br />
 
 <p align="center">

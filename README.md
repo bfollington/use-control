@@ -16,7 +16,7 @@
 
 <p align="center"><strong>use-input</strong> is an elegant, typesafe input management system for React supporting keyboard, mouse and gamepad (soon).</p>
   
-<p align="center"><a href="https://furo.netlify.app/">👁 &nbsp;Live Demo</a><br> (source in <code>packages/example</code>)</p>
+<p align="center"><a href="https://use-input.vercel.app/">👁 &nbsp;Live Demo</a><br> (source in <code>packages/example</code>)</p>
 
 # Example
 

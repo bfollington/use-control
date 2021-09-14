@@ -18,28 +18,28 @@
 # Example
 
 ```tsx
-  const inputMap = {
-    left: [KEYS.left_arrow, KEYS.a],
-    right: [KEYS.right_arrow, KEYS.d]
-  }
-  
-  const MyComponent = () => {
-    const [count, setCount] = useState(0)
-  
-    useActionPressed(inputMap, "left", () => {
-      setCount(count - 1)
-    })
-    
-    useActionPressed(inputMap, "right", () => {
-      setCount(count + 1)
-    })
-    
-    useMouseMove(([x, y]) => {
-      console.log("mouse pos", x, y)
-    }, 50) // Throttle to 50ms intervals
+const inputMap = {
+  left: [KEYS.left_arrow, KEYS.a],
+  right: [KEYS.right_arrow, KEYS.d]
+}
 
-    return <div>{count}</div>
-  }
+const MyComponent = () => {
+  const [count, setCount] = useState(0)
+
+  useActionPressed(inputMap, "left", () => {
+    setCount(count - 1)
+  })
+
+  useActionPressed(inputMap, "right", () => {
+    setCount(count + 1)
+  })
+
+  useMouseMove(([x, y]) => {
+    console.log("mouse pos", x, y)
+  }, 50) // Throttle to 50ms intervals
+
+  return <div>{count}</div>
+}
 ```
 
 # Installation
@@ -76,11 +76,11 @@ Personally, I'm just tired of writing `useEffect` with `document.addEventListene
 `use-input` relies on the core concept of an `Input Mapping` of keycodes, mouse buttons and gamepad buttons into `Input Actions` (i.e. "left", "right", "jump", "select"), declared as a JS object:
 
 ```ts
-  const inputMap = {
-    left: [KEYS.left_arrow, KEYS.a],
-    right: [KEYS.right_arrow, KEYS.d],
-    jump: [KEYS.space, KEYS.l_shift]
-  }
+const inputMap = {
+  left: [KEYS.left_arrow, KEYS.a],
+  right: [KEYS.right_arrow, KEYS.d],
+  jump: [KEYS.space, KEYS.l_shift]
+}
 ```
 
 You _should_ consider declaring this statically and sharing the mapping across your app but it can be dynamically updated at runtime and different mappings can be used in different components as needed.
@@ -88,9 +88,9 @@ You _should_ consider declaring this statically and sharing the mapping across y
 These mappings allow us to think at a higher level when consuming input, instead of asking "what events do I need to bind to?" or "what keycode am I listening for?" we can simply ask "what happens when the user presses the `jump` button?"
 
 ```ts
-  useActionPressed(inputMap, "jump", () => {
-    player.addForce(0, -10)
-  })
+useActionPressed(inputMap, "jump", () => {
+  player.addForce(0, -10)
+})
 ```
 
 ## Running this repo

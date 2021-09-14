@@ -1,6 +1,6 @@
 
 
-<a href=""><img src="https://raw.githubusercontent.com/bfollington/use-input/master/banner.png" /></a>
+<a href=""><img src="https://raw.githubusercontent.com/bfollington/use-input/main/banner.png" /></a>
 <br />
 
 <p align="center">
@@ -90,7 +90,7 @@ However, none of these allow for strongly typed messages in TypeScript or multip
   }
 ```
 
-See the [full example](https://github.com/bfollington/furo/tree/master/packages/example) for more detail. 
+See the [full example](https://github.com/bfollington/furo/tree/main/packages/example) for more detail. 
 
 You can also [view the live demo](https://furo.netlify.app/).
 
@@ -98,7 +98,7 @@ You can also [view the live demo](https://furo.netlify.app/).
 
 **Furō** features a built-in history tracker. This can be enabled and disabled via a boolean supplied to `createBus()`. 
 
-You can visualise which events precipitated one another in a tree format, including the payload of each event. The [full example](https://github.com/bfollington/furo/tree/master/packages/example) has a reference usage of `<HistoryDebugger />`. 
+You can visualise which events precipitated one another in a tree format, including the payload of each event. The [full example](https://github.com/bfollington/furo/tree/main/packages/example) has a reference usage of `<HistoryDebugger />`. 
 
 ```
 click::9
@@ -131,7 +131,7 @@ click::13
 
 // TODO
 
-For now, copy the [example](https://github.com/bfollington/furo/tree/master/packages/example).
+For now, copy the [example](https://github.com/bfollington/furo/tree/main/packages/example).
 
 ## Running this repo
 

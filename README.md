@@ -14,124 +14,86 @@
 
 </p><br>
 
-<p align="center"><strong>use-input</strong> is a simple but powerful messaging layer for <code>React</code> applications. It can be used to tame complex asynchronous workflows and preserve sanity.
+<p align="center"><strong>use-input</strong> is an elegant input management system for React supporting keyboard, mouse and gamepad (soon).</p>
   
 <p align="center"><a href="https://furo.netlify.app/">👁 &nbsp;Live Demo</a><br> (source in <code>packages/example</code>)</p>
 
-# Installation
-```
-npm i @twopm/furo
-```
-
-```
-yarn add @twopm/furo
-```
-
-# Why furō?
-
-There are already multiple event bus libraries for React:
-
-- https://github.com/goto-bus-stop/react-bus
-- https://github.com/arkency/event-bus
-- https://github.com/fabienjuif/use-bus
-
-However, none of these allow for strongly typed messages in TypeScript or multiple event streams. Furō also provides a [debug / history tracking](https://github.com/bfollington/furo#history-tracking) system loosely inspired by [re-frame-flow](https://github.com/ertugrulcetin/re-frame-flow).
-
-# Simple Example
+# Example
 
 ```tsx
-  const Demo = () => {
-    const { dispatch, useSubscribe } = useEvents()
-    const [form, setForm] = useState({})
-    const onSubmit = () => { dispatch({ type: 'form-submit-requested', payload: form}) }
-
-    useSubscribe('form-submit-success', () => {
-      alert('Success!')
-    })
-
-    useSubscribe('form-submit-failed', (ev) => {
-      alert('Failed, see console')
-      console.error('Form submission failed', ev.errors)
-    })
-
-    return (
-      <div>
-        {/* form goes here*/}
-        <button type="submit" onClick={onSubmit}>Submit</button>
-      </div>
-    )
+  const inputMap = {
+    left: [KEYS.left_arrow, KEYS.a],
+    right: [KEYS.right_arrow, KEYS.d]
   }
-
-  // ... elsewhere
-
-  const Consumer = () => {
-    const { useSubscribe } = useEvents()
-
-    useSubscribe('form-submit-requested', async (ev, dispatch) => {
-      const res = await fetch(
-        'https://example.com/profile',
-          {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(ev.payload),
-        }
-      ).then(r => r.json())
-
-      if (res.ok) {
-        dispatch({ type: 'form-submit-success' })
-      } else {
-        dispatch({ type: 'form-submit-failed', errors: res.errors })
-      }
+  
+  const MyComponent = () => {
+    const [count, setCount] = useState(0)
+  
+    useActionPressed(inputMap, "left", () => {
+      setCount(count - 1)
     })
+    
+    useActionPressed(inputMap, "right", () => {
+      setCount(count + 1)
+    })
+    
+    useMouseMove(([x, y]) => {
+      console.log("mouse pos", x, y)
+    }, 50) // Throttle to 50ms intervals
 
-    return null
+    return <div>{count}</div>
   }
 ```
 
-See the [full example](https://github.com/bfollington/furo/tree/main/packages/example) for more detail. 
-
-You can also [view the live demo](https://furo.netlify.app/).
-
-# History Tracking
-
-**Furō** features a built-in history tracker. This can be enabled and disabled via a boolean supplied to `createBus()`. 
-
-You can visualise which events precipitated one another in a tree format, including the payload of each event. The [full example](https://github.com/bfollington/furo/tree/main/packages/example) has a reference usage of `<HistoryDebugger />`. 
-
+# Installation
 ```
-click::9
-{}
-
-  → inc::10
-    {"amount":1}
-  
-  → fetch-trending::11
-    {"language":"clojure"}
-  
-      → retrieved-trending::12
-        {"repos":["tonsky/FiraCode","metabase/metabase","LightTable/LightTable", ...]}
-
-click::13
-{}
-
-  → inc::14
-    {"amount":1}
-
-  → fetch-trending::15
-    {"language":"haskell"}
-
-      → retrieved-trending::16
-        {"repos":["koalaman/shellcheck","jgm/pandoc","hasura/graphql-engine", ...]}
-
+npm i @twopm/use-input
 ```
 
-# Setup
+```
+yarn add @twopm/use-input
+```
 
-// TODO
+# API Overview
 
-For now, copy the [example](https://github.com/bfollington/furo/tree/main/packages/example).
+- `useActionPressed(inputMap, actionName, callback)`
+- `useActionReleased(inputMap, actionName, callback)`
+- `useActionHeld(inputMap, actionName, throttleInterval, callback)`
+- `useMouseMove(callback, throttleInterval)`
+- `useMouseMoveNormalised(callback, throttleInterval)`
+- `useMouseDelta(callback, throttleInterval)`
+
+Soon
+
+- `useMouseButtonPressed(callback)`
+- `useMouseButtonReleased(callback)`
+- `useAxis(callback, throttleInterval)`
+
+# Why use-input?
+
+Personally, I'm just tired of writing `useEffect` with `document.addEventListener('keydown', ...)`. `use-input` is the API I've always dreamed of for dealing with input events, it's heavily inspired by my experience with input systems in game development.
+
+# Usage 
+
+`use-input` relies on the core concept of an `Input Mapping` of keycodes, mouse buttons and gamepad buttons into `Input Actions` (i.e. "left", "right", "jump", "select"), declared as a JS object:
+
+```ts
+  const inputMap = {
+    left: [KEYS.left_arrow, KEYS.a],
+    right: [KEYS.right_arrow, KEYS.d],
+    jump: [KEYS.space, KEYS.l_shift]
+  }
+```
+
+You _should_ consider declaring this statically and sharing the mapping across your app but it can be dynamically updated at runtime and different mappings can be used in different components as needed.
+
+These mappings allow us to think at a higher level when consuming input, instead of asking "what events do I need to bind to?" or "what keycode am I listening for?" we can simply ask "what happens when the user presses the `jump` button?"
+
+```ts
+  useActionPressed(inputMap, "jump", () => {
+    player.addForce(0, -10)
+  })
+```
 
 ## Running this repo
 
@@ -145,7 +107,7 @@ yarn bootstrap
 ### Running the examples
 
 ```
-cd packages/furo
+cd packages/use-input
 yarn build
 cd ../example
 yarn start

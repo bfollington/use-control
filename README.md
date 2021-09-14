@@ -1,20 +1,20 @@
 
 
-<a href=""><img src="https://raw.githubusercontent.com/bfollington/furo/master/banner.png" /></a>
+<a href=""><img src="https://raw.githubusercontent.com/bfollington/use-input/master/banner.png" /></a>
 <br />
 
 <p align="center">
-  <a href="https://github.com/bfollington/furo/actions?query=workflow%3A%22Build%22"><img alt="Build" src="https://github.com/bfollington/furo/workflows/Build/badge.svg"></a>
-<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/bfollington/furo">
-<img alt="GitHub" src="https://img.shields.io/github/license/bfollington/furo">
+  <a href="https://github.com/bfollington/use-input/actions?query=workflow%3A%22Build%22"><img alt="Build" src="https://github.com/bfollington/use-input/workflows/Build/badge.svg"></a>
+<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/bfollington/use-input">
+<img alt="GitHub" src="https://img.shields.io/github/license/bfollington/use-input">
 
 <br>
-  <img alt="npm" src="https://img.shields.io/npm/v/@twopm/furo">
-<img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/@twopm/furo">
+  <img alt="npm" src="https://img.shields.io/npm/v/@twopm/use-input">
+<img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/@twopm/use-input">
 
 </p><br>
 
-<p align="center"><strong>Furō</strong> is a simple but powerful messaging layer for <code>React</code> applications. It can be used to tame complex asynchronous workflows and preserve sanity.
+<p align="center"><strong>use-input</strong> is a simple but powerful messaging layer for <code>React</code> applications. It can be used to tame complex asynchronous workflows and preserve sanity.
   
 <p align="center"><a href="https://furo.netlify.app/">👁 &nbsp;Live Demo</a><br> (source in <code>packages/example</code>)</p>
 

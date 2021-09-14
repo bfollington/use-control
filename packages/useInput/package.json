@@ -20,7 +20,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "peerDependencies": {
-    "react": "^15.0.0 || ^16.0.0 || ^17.0.0"
+    "react": "^15.0.0 || ^16.0.0 || ^17.0.0",
+    "rxjs": "^6.6.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
@@ -29,7 +30,8 @@
     "@typescript-eslint/parser": "^4.25.0",
     "eslint-plugin-react": "^7.23.2",
     "prettier": "^2.3.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.2",
+    "rxjs": "^6.6.0"
   },
   "gitHead": "f73b36649e1aec9cb92bd58da1520ea880bccb02"
 }

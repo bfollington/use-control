@@ -1,16 +1,5 @@
-import { Html } from "@react-three/drei"
-import { useLoader } from "@react-three/fiber"
-import React, { MutableRefObject, useEffect, useRef } from "react"
-import { interval } from "rxjs"
-import { map } from "rxjs/operators"
-import * as THREE from "three"
-import "./materials/ShinyMaterial"
-import bg from "./resources/seamless8.png"
-import { useAnimation } from "./useAnimation/three"
-import { interpolator, sequence, useObservable } from "./useAnimation/useAnimation"
-import KEYS from "./useInput/keys"
-import { useActionHeld, useActionPressed, useActionReleased } from "./useInput/keyStream"
-import { useMouseMoveNormalised } from "./useInput/mouseStream"
+import { KEYS, useActionHeld, useActionPressed, useMouseMoveNormalised } from '@twopm/use-input'
+import React, { MutableRefObject, useRef } from 'react'
 
 const inputMap = {
   left: [KEYS.left_arrow, KEYS.a],
@@ -26,83 +15,46 @@ function modify<T>(val: MutableRefObject<T> | undefined, sink: (v: T) => void) {
   }
 }
 
-const anim = sequence(interpolator(0, 1.2, "easeOutCubic"), interpolator(1.2, 1, "easeOutCubic"))
-
 export default function Wall(props: any) {
-  const material = useRef()
   const mesh = useRef()
-  const [texture] = useLoader(THREE.TextureLoader, [bg])
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
 
-  const [animationInterval, setAnimationInterval] = React.useState(500)
-  const [counter, setCounter] = React.useState(0)
-
-  const angle = useObservable(0)
-  useAnimation(angle, interpolator(0, 1, "easeOutQuad"), 250, (v) => {
+  useActionPressed(inputMap, 'left', () => {
     modify<any>(mesh, (m) => {
-      m.rotation.x = v
-      m.rotation.y = v
+      m.scale.x -= 0.1
     })
   })
 
-  const xscale = useObservable(1)
-  useAnimation(xscale, anim, 500, (v) => {
+  useActionPressed(inputMap, 'right', () => {
     modify<any>(mesh, (m) => {
-      m.scale.z = v
+      m.scale.x += 0.1
     })
   })
 
-  const yscale = useObservable(1)
-  useAnimation(yscale, anim, 500, (v) => {
+  useActionHeld(inputMap, 'up', 50, () => {
     modify<any>(mesh, (m) => {
-      m.scale.y = v
+      m.scale.y += 0.05
     })
   })
 
-  useActionPressed(inputMap, "left", () => {
-    setAnimationInterval(animationInterval - 50)
-  })
-
-  useActionPressed(inputMap, "right", () => {
-    setAnimationInterval(animationInterval + 50)
-  })
-
-  useActionReleased(inputMap, "up", () => {
-    yscale.swap((s) => s + 0.3)
-  })
-
-  useActionReleased(inputMap, "down", () => {
-    yscale.swap((s) => s - 0.3)
-  })
-
-  useActionHeld(inputMap, "count", 50, () => {
-    setCounter(counter + 1)
+  useActionHeld(inputMap, 'down', 50, () => {
+    modify<any>(mesh, (m) => {
+      m.scale.y -= 0.05
+    })
   })
 
   useMouseMoveNormalised(([x, y]) => {
-    yscale.set(y * 4 + 0.5)
-    xscale.set(x * 4 + 0.5)
-  }, 50)
-
-  useEffect(() => {
-    const s = interval(animationInterval)
-      .pipe(map((t) => Math.random() * Math.PI * 2))
-      .subscribe(angle.set)
-    return () => s.unsubscribe()
-  }, [angle, animationInterval])
+    console.log('mouse', x, y)
+    modify<any>(mesh, (m) => {
+      m.rotation.x = x * Math.PI * 2
+      m.rotation.y = y * Math.PI * 2
+    })
+  }, 1000 / 30)
 
   return (
     <group {...props}>
       <mesh ref={mesh}>
-        {/* <torusKnotGeometry args={[1, 1, 50]} /> */}
-        {/* <icosahedronGeometry args={[3, 10]} /> */}
         <boxGeometry args={[4, 4]} />
-        {/* <shinyMaterial ref={material} noiseTexture={texture} /> */}
-        {/* <meshLambertMaterial color="red" /> */}
-        <meshPhongMaterial color={props.color || "white"} />
-        <Html>
-          <label>{counter}</label>
-        </Html>
+        <meshPhongMaterial color={props.color || 'white'} />
       </mesh>
     </group>
   )

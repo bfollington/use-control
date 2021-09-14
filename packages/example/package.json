@@ -1,12 +1,14 @@
 {
-  "name": "furo-example",
-  "version": "0.0.5",
+  "name": "use-input-example",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@twopm/use-input": "0.1.0",
+    "@react-three/drei": "4.1.8",
+    "@react-three/fiber": "6.0.14",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@twopm/furo": "^0.0.5",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
@@ -14,6 +16,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "rxjs": "6.6.7",
+    "three": "0.127.0",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
@@ -40,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/three": "^0.131.0"
   }
 }

@@ -7,6 +7,7 @@
   "private": true,
   "readme": "README.md",
   "scripts": {
+    "vercel": "yarn bootstrap && yarn build",
     "netlify": "yarn bootstrap && yarn build",
     "build": "cd packages/useInput && yarn build && cd ../example && yarn build",
     "publish": "yarn build && lerna publish",

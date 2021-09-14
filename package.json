@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "license": "MIT",
+  "private": true,
+  "readme": "README.md",
+  "scripts": {
+    "netlify": "yarn bootstrap && yarn build",
+    "build": "cd packages/useInput && yarn build && cd ../example && yarn build",
+    "publish": "yarn build && lerna publish",
+    "changed": "lerna changed",
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean"
+  }
+}

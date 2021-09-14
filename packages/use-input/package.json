@@ -5,7 +5,7 @@
     "access": "public"
   },
   "description": "A powerful set of hooks for elegantly handling keyboard, mouse and gamepad input (soon)",
-  "keywords": ["input", "keyboard", "controller", "gamepad", "mouse", "useInput", "keypress"],
+  "keywords": ["input", "keyboard", "controller", "gamepad", "mouse", "use-input", "useInput", "keypress"],
   "author": "bfollington",
   "license": "MIT",
   "repository": "bfollington/use-input",

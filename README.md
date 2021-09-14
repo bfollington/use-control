@@ -63,11 +63,12 @@ yarn add @twopm/use-input
 - `useMouseMoveNormalised(callback, throttleInterval)`
 - `useMouseDelta(callback, throttleInterval)`
 
-Soon
+## Roadmap
 
+- Gamepad API support for input action mapping
 - `useMouseButtonPressed(callback)`
 - `useMouseButtonReleased(callback)`
-- `useAxis(callback, throttleInterval)`
+- `useAxis(callback, throttleInterval)` (Gamepad API + Mouse)
 
 # Why use-input?
 

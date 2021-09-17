@@ -1,5 +1,5 @@
 {
-  "name": "@twopm/use-control",
+  "name": "use-control",
   "version": "0.1.0",
   "publishConfig": {
     "access": "public"

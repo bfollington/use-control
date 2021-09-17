@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Subject } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 
-let buttonCache: GamepadButton[] = []
+let buttonCache: { [idx: number]: GamepadButton[] } = {}
 let poll: NodeJS.Timeout
 let presses$ = new Subject<GamepadAction>()
 let held$ = new Subject<GamepadAction>()
@@ -29,29 +29,31 @@ export function init(pollIntervalMs: number = 1000 / 60) {
       : []
     if (!gamepads) return
 
-    if (gamepads[0]) {
-      for (let btnIdx = 0; btnIdx < gamepads[0].buttons.length; btnIdx++) {
-        const btn = gamepads[0].buttons[btnIdx]
-        const cachedBtn = buttonCache[btnIdx] || {}
+    for (let ctrlIdx = 0; ctrlIdx < gamepads.length; ctrlIdx++) {
+      if (gamepads[ctrlIdx]) {
+        for (let btnIdx = 0; btnIdx < gamepads[0].buttons.length; btnIdx++) {
+          const btn = gamepads[ctrlIdx].buttons[btnIdx]
+          const cachedBtn = buttonCache?.[ctrlIdx]?.[btnIdx] || {}
 
-        if (btn.pressed) {
-          held$.next({ controllerIndex: 0, buttonIndex: btnIdx })
+          if (btn.pressed) {
+            held$.next({ controllerIndex: 0, buttonIndex: btnIdx })
+          }
+
+          if (!btn.pressed && cachedBtn.pressed) {
+            releases$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
+          }
+
+          if (btn.pressed && !cachedBtn.pressed) {
+            presses$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
+          }
         }
 
-        if (!btn.pressed && cachedBtn.pressed) {
-          releases$.next({ controllerIndex: 0, buttonIndex: btnIdx })
+        buttonCache[ctrlIdx] = gamepads[ctrlIdx].buttons.slice()
+
+        for (let axisIdx = 0; axisIdx < gamepads[ctrlIdx].axes.length; axisIdx++) {
+          const axis = gamepads[ctrlIdx].axes[axisIdx]
+          axes$.next({ controllerIndex: ctrlIdx, axisIndex: axisIdx, value: axis })
         }
-
-        if (btn.pressed && !cachedBtn.pressed) {
-          presses$.next({ controllerIndex: 0, buttonIndex: btnIdx })
-        }
-      }
-
-      buttonCache = gamepads[0].buttons.slice()
-
-      for (let axisIdx = 0; axisIdx < gamepads[0].axes.length; axisIdx++) {
-        const axis = gamepads[0].axes[axisIdx]
-        axes$.next({ controllerIndex: 0, axisIndex: axisIdx, value: axis })
       }
     }
   }, pollIntervalMs)
@@ -90,71 +92,4 @@ export function useGamepadAxis(
 
     return () => sub.unsubscribe()
   }, [controllerIndex, axisIndex, sink])
-}
-
-export function useGamepad(controllerIndex: number, buttonIndex: number, sink: () => void) {
-  const [gamepadLookup, setGamepadLookup] = useState<{ [id: number]: string }>({})
-
-  useEffect(() => {
-    const onConnect = (e: GamepadEvent) => {
-      console.log(
-        'Gamepad connected at index %d: %s. %d buttons, %d axes.',
-        e.gamepad.index,
-        e.gamepad.id,
-        e.gamepad.buttons.length,
-        e.gamepad.axes.length
-      )
-
-      setGamepadLookup({ ...gamepadLookup, [e.gamepad.index]: e.gamepad.id })
-    }
-
-    const onDisconnect = (e: GamepadEvent) => {
-      console.log('Gamepad disconnected from index %d: %s', e.gamepad.index, e.gamepad.id)
-
-      const next = { ...gamepadLookup }
-      delete next[e.gamepad.index]
-      setGamepadLookup(gamepadLookup)
-    }
-
-    window.addEventListener('gamepadconnected', onConnect)
-    window.addEventListener('gamepaddisconnected', onDisconnect)
-
-    const poll = setInterval(() => {
-      const gamepads: Gamepad[] = navigator.getGamepads
-        ? navigator.getGamepads()
-        : (navigator as any).webkitGetGamepads
-        ? (navigator as any).webkitGetGamepads()
-        : []
-      if (!gamepads) return
-
-      if (gamepads[controllerIndex]) {
-        const buttonsOfInterest = [buttonIndex]
-
-        for (const btnIdx of buttonsOfInterest) {
-          const btn = gamepads[controllerIndex].buttons[btnIdx]
-          const cachedBtn = buttonCache[btnIdx] || {}
-
-          if (btn.pressed) {
-            console.log(btnIdx, 'is held')
-          }
-
-          if (!btn.pressed && cachedBtn.pressed) {
-            console.log(btnIdx, 'is released')
-          }
-
-          if (btn.pressed && !cachedBtn.pressed) {
-            sink()
-          }
-        }
-
-        buttonCache = gamepads[controllerIndex].buttons.slice()
-      }
-    }, 1000 / 60)
-
-    return () => {
-      window.removeEventListener('gamepadconnected', onConnect)
-      window.removeEventListener('gamepaddisconnected', onDisconnect)
-      clearInterval(poll)
-    }
-  }, [gamepadLookup, setGamepadLookup, controllerIndex, buttonIndex, sink])
 }

@@ -57,6 +57,7 @@ export default function Wall(props: any) {
       m.rotation.x = v * Math.PI * 2
     })
   })
+
   useGamepadAxis(0, XBOX_ONE.STICK_R_Y, (v) => {
     modify<any>(mesh, (m) => {
       m.rotation.y = v * Math.PI * 2

@@ -1,4 +1,4 @@
-import { KEYS, useActionHeld, useActionPressed, useMouseMoveNormalised } from '@twopm/use-input'
+import { KEYS, useActionHeld, useActionPressed, useMouseMoveNormalised } from '@twopm/use-control'
 import React, { MutableRefObject, useRef } from 'react'
 
 const inputMap = {

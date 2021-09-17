@@ -24,4 +24,4 @@ yarn-error.log*
 
 packages/furo/lib
 packages/example/build
-packages/use-input/lib
+packages/use-control/lib

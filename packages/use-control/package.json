@@ -1,5 +1,5 @@
 {
-  "name": "@twopm/use-input",
+  "name": "@twopm/use-control",
   "version": "0.1.0",
   "publishConfig": {
     "access": "public"
@@ -11,13 +11,13 @@
     "controller",
     "gamepad",
     "mouse",
-    "use-input",
+    "use-control",
     "useInput",
     "keypress"
   ],
   "author": "bfollington",
   "license": "MIT",
-  "repository": "bfollington/use-input",
+  "repository": "bfollington/use-control",
   "main": "lib/index.js",
   "types": "lib/",
   "files": [

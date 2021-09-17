@@ -9,7 +9,7 @@
   "scripts": {
     "vercel": "yarn bootstrap && yarn build",
     "netlify": "yarn bootstrap && yarn build",
-    "build": "cp README.md packages/use-input/README.md && cd packages/use-input && yarn build && cd ../example && yarn build",
+    "build": "cp README.md packages/use-control/README.md && cd packages/use-control && yarn build && cd ../example && yarn build",
     "publish": "yarn build && lerna publish",
     "changed": "lerna changed",
     "bootstrap": "lerna bootstrap",

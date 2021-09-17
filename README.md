@@ -5,7 +5,8 @@
 
 [![Version](https://img.shields.io/npm/v/use-control?style=flat&colorA=000000&colorB=000000)](https://npmjs.com/package/use-control)
 [![Twitter](https://img.shields.io/twitter/follow/vivavolt?label=%40vivavolt&style=flat&colorA=000000&colorB=000000&logo=twitter&logoColor=000000)](https://twitter.com/vivavolt)
-[![ETH](https://img.shields.io/badge/ETH-f5f5f5?style=flat&colorA=000000&colorB=000000)](https://blockchain.com/eth/address/0x981e493b795A7a28c43Bf8d7a8E125C419435Fa7)
+[![Donate (ETH)](https://img.shields.io/badge/Donate-(ETH)-f5f5f5?style=flat&colorA=000000&colorB=000000)](https://blockchain.com/eth/address/0x981e493b795A7a28c43Bf8d7a8E125C419435Fa7)
+[![Donate ($)](https://img.shields.io/badge/Donate-($)-f5f5f5?style=flat&colorA=000000&colorB=000000)](https://ko-fi.com/vivavolt)
 ![Language](https://img.shields.io/github/languages/top/bfollington/use-control?style=flat&colorA=000000&colorB=000000)
 ![License](https://img.shields.io/github/license/bfollington/use-control?style=flat&colorA=000000&colorB=000000)
 ![Bundle Size](https://img.shields.io/bundlephobia/min/use-control?style=flat&colorA=000000&colorB=000000)

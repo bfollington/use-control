@@ -58,11 +58,12 @@ function buildStream<T extends InputMap>(
             filter((p) => p.buttonIndex === k.code && p.controllerIndex === k.controllerIndex)
           )
         case 'keycode-button':
+          const keyboardEventType = eventType === 'down' ? 'keydown' : 'keyup'
           return key$.pipe(
             filter(
               (ev) =>
                 k.code === (ev as KeyboardEvent).keyCode &&
-                (ev as KeyboardEvent).type === eventType &&
+                (ev as KeyboardEvent).type === keyboardEventType &&
                 !(ev as KeyboardEvent).repeat
             )
           )

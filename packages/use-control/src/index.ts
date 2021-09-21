@@ -1,18 +1,19 @@
-import { useMouseDelta, useMouseMove, useMouseMoveNormalised } from './mouseStream'
-import { useKeyDown, useKeyHeld, useKeyUp } from './keyStream'
 import {
-  useButtonHeld,
-  useButtonPressed,
-  useButtonReleased,
-  keycode,
   gamepadAxis,
   gamepadButton,
+  keycode,
   mouseAxis,
   mouseButton,
   useAxis,
+  useButtonHeld,
+  useButtonPressed,
+  useButtonReleased,
 } from './actions'
-import { init, teardown, useGamepadAxis, useGamepadButtonPressed } from './gamepad'
+import GAMEPADS from './gamepads'
+import { init, teardown, useGamepadAxis, useGamepadButtonPressed } from './gamepadStream'
 import KEYS from './keys'
+import { useKeyDown, useKeyHeld, useKeyUp } from './keyStream'
+import { useMouseDelta, useMouseMove, useMouseMoveNormalised } from './mouseStream'
 
 export {
   useMouseDelta as useMouseDelta,
@@ -35,4 +36,5 @@ export {
   mouseAxis as mouseAxis,
   mouseButton as mouseButton,
   KEYS as KEYS,
+  GAMEPADS as GAMEPADS,
 }

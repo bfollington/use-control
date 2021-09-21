@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { EMPTY, interval, merge } from 'rxjs'
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators'
-import { axes$, presses$, releases$ } from './gamepad'
+import { axes$, presses$, releases$ } from './gamepadStream'
 import { key$ } from './keyStream'
 import { mousePosNormalisedX$, mousePosNormalisedY$ } from './mouseStream'
 

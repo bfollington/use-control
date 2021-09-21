@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { EMPTY, interval, merge } from 'rxjs'
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators'
-import { axes$ } from './gamepad'
+import { axes$, presses$, releases$ } from './gamepad'
 import { key$ } from './keyStream'
 import { mousePosNormalisedX$, mousePosNormalisedY$ } from './mouseStream'
 
@@ -41,20 +41,34 @@ function useKeycodeEvents<T extends InputMap>(
   sink: () => void
 ) {
   const keys = inputMap.buttons[key as string]
+  const button$ = merge(
+    ...keys.map((k) => {
+      switch (k.type) {
+        case 'gamepad-button':
+          const s = eventType === 'keydown' ? presses$ : releases$
+          return s.pipe(
+            filter((p) => p.buttonIndex === k.code && p.controllerIndex === k.controllerIndex)
+          )
+        case 'keycode-button':
+          return key$.pipe(
+            filter(
+              (ev) =>
+                keys.some(
+                  (k) => k.type === 'keycode-button' && k.code === (ev as KeyboardEvent).keyCode
+                ) &&
+                (ev as KeyboardEvent).type === eventType &&
+                !(ev as KeyboardEvent).repeat
+            )
+          )
+        case 'mouse-button':
+          // TODO(ben): perhaps this belongs in a later PR?
+          return EMPTY
+      }
+    })
+  )
 
   useEffect(() => {
-    const s = key$
-      .pipe(
-        filter(
-          (ev) =>
-            keys.some(
-              (k) => k.type === 'keycode-button' && k.code === (ev as KeyboardEvent).keyCode
-            ) &&
-            (ev as KeyboardEvent).type === eventType &&
-            !(ev as KeyboardEvent).repeat
-        )
-      )
-      .subscribe(sink)
+    const s = button$.subscribe(sink)
     return () => s.unsubscribe()
   }, [keys, eventType, sink])
 }

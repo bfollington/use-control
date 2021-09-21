@@ -9,7 +9,7 @@ import {
   useButtonHeld,
   useButtonPressed,
 } from 'use-control'
-import { useGamepadAxis, useGamepadButtonPressed } from './gamepad'
+import { useGamepadButtonPressed } from './gamepad'
 
 const XBOX_ONE = {
   D_LEFT: 14,
@@ -20,14 +20,6 @@ const XBOX_ONE = {
   STICK_L_Y: 1,
   STICK_R_X: 2,
   STICK_R_Y: 3,
-}
-
-const inputMap_old = {
-  left: [KEYS.left_arrow, KEYS.a],
-  right: [KEYS.right_arrow, KEYS.d],
-  up: [KEYS.up_arrow, KEYS.w],
-  down: [KEYS.down_arrow, KEYS.s],
-  count: [KEYS.space],
 }
 
 const inputMap = {

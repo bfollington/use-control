@@ -3,6 +3,29 @@ import { fromEvent, identity } from 'rxjs'
 import { distinctUntilChanged, map, pairwise, sampleTime, share } from 'rxjs/operators'
 
 const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(share())
+export const mouseDown$ = fromEvent<PointerEvent>(window, 'pointerdown').pipe(share())
+export const mouseUp$ = fromEvent<PointerEvent>(window, 'pointerup').pipe(share())
+
+export type MouseButton = 'none' | 'left' | 'right' | 'middle'
+export const MOUSEBUTTONS: { [id: number]: MouseButton } = {
+  0: 'none',
+  1: 'left',
+  2: 'right',
+  4: 'middle',
+  // 8: 4th button (typically the "Browser Back" button)
+  // 16 : 5th button (typically the "Browser Forward" button)
+}
+
+export const MOUSEBUTTONS_SAFARI: { [id: number]: MouseButton } = {
+  0: 'none',
+  1: 'left',
+  2: 'middle',
+  3: 'right',
+}
+
+export function whichButtonPressed(ev: PointerEvent) {
+  return !ev.buttons ? MOUSEBUTTONS_SAFARI[ev.which] : MOUSEBUTTONS[ev.buttons]
+}
 
 export const mousePos$ = mouseMove$.pipe(
   map((ev: MouseEvent) => [ev.clientX, ev.clientY]),

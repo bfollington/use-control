@@ -3,10 +3,17 @@ import { EMPTY, interval, merge } from 'rxjs'
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators'
 import { axes$, presses$, releases$ } from './gamepadStream'
 import { key$ } from './keyStream'
-import { mousePosNormalisedX$, mousePosNormalisedY$ } from './mouseStream'
+import {
+  MouseButton,
+  mouseDown$,
+  mousePosNormalisedX$,
+  mousePosNormalisedY$,
+  mouseUp$,
+  whichButtonPressed,
+} from './mouseStream'
 
-export function mouseButton(index: number) {
-  return { type: 'mouse-button', index } as const
+export function mouseButton(button: MouseButton) {
+  return { type: 'mouse-button', button } as const
 }
 
 export function keycode(code: number) {
@@ -34,18 +41,19 @@ type AxisAction = ReturnType<typeof mouseAxis> | ReturnType<typeof gamepadAxis>
 
 type InputMap = { buttons: { [id: string]: ButtonAction[] }; axes: { [id: string]: AxisAction[] } }
 
-function useKeycodeEvents<T extends InputMap>(
-  eventType: string,
+type ButtonEventType = 'down' | 'up'
+
+function buildStream<T extends InputMap>(
+  eventType: ButtonEventType,
   inputMap: T,
-  key: keyof T['buttons'],
-  sink: () => void
+  key: keyof T['buttons']
 ) {
   const keys = inputMap.buttons[key as string]
-  const button$ = merge(
+  return merge(
     ...keys.map((k) => {
       switch (k.type) {
         case 'gamepad-button':
-          const s = eventType === 'keydown' ? presses$ : releases$
+          const s = eventType === 'down' ? presses$ : releases$
           return s.pipe(
             filter((p) => p.buttonIndex === k.code && p.controllerIndex === k.controllerIndex)
           )
@@ -53,24 +61,31 @@ function useKeycodeEvents<T extends InputMap>(
           return key$.pipe(
             filter(
               (ev) =>
-                keys.some(
-                  (k) => k.type === 'keycode-button' && k.code === (ev as KeyboardEvent).keyCode
-                ) &&
+                k.code === (ev as KeyboardEvent).keyCode &&
                 (ev as KeyboardEvent).type === eventType &&
                 !(ev as KeyboardEvent).repeat
             )
           )
         case 'mouse-button':
-          // TODO(ben): perhaps this belongs in a later PR?
-          return EMPTY
+          const m = eventType === 'down' ? mouseDown$ : mouseUp$
+          return m.pipe(filter((ev) => whichButtonPressed(ev as PointerEvent) === k.button))
       }
     })
   )
+}
+
+function useKeycodeEvents<T extends InputMap>(
+  eventType: ButtonEventType,
+  inputMap: T,
+  key: keyof T['buttons'],
+  sink: () => void
+) {
+  const button$ = buildStream(eventType, inputMap, key)
 
   useEffect(() => {
     const s = button$.subscribe(sink)
     return () => s.unsubscribe()
-  }, [keys, eventType, sink])
+  }, [button$, eventType, sink])
 }
 
 export function useButtonPressed<T extends InputMap>(
@@ -78,7 +93,7 @@ export function useButtonPressed<T extends InputMap>(
   key: keyof T['buttons'],
   sink: () => void
 ) {
-  useKeycodeEvents('keydown', inputMap, key, sink)
+  useKeycodeEvents('down', inputMap, key, sink)
 }
 
 export function useButtonReleased<T extends InputMap>(
@@ -86,7 +101,7 @@ export function useButtonReleased<T extends InputMap>(
   key: keyof T['buttons'],
   sink: () => void
 ) {
-  useKeycodeEvents('keyup', inputMap, key, sink)
+  useKeycodeEvents('up', inputMap, key, sink)
 }
 
 export function useButtonHeld<T extends InputMap>(
@@ -97,15 +112,14 @@ export function useButtonHeld<T extends InputMap>(
 ) {
   const keys = inputMap.buttons[key as string]
 
+  const pressed$ = buildStream('down', inputMap, key).pipe(map((_) => 'down'))
+  const released$ = buildStream('up', inputMap, key).pipe(map((_) => 'up'))
+
   useEffect(() => {
-    const s = key$
+    const s = merge(pressed$, released$)
       .pipe(
-        filter((ev) =>
-          keys.some((k) => k.type === 'keycode-button' && k.code === (ev as KeyboardEvent).keyCode)
-        ),
         switchMap((ev) => {
-          const kev = ev as KeyboardEvent
-          if (kev.type === 'keydown') {
+          if (ev === 'down') {
             return interval(intervalMs)
           } else {
             return EMPTY
@@ -113,6 +127,7 @@ export function useButtonHeld<T extends InputMap>(
         })
       )
       .subscribe(sink)
+
     return () => s.unsubscribe()
   }, [keys, intervalMs, sink])
 }

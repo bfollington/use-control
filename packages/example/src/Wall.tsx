@@ -9,17 +9,29 @@ import {
   useAxis,
   useButtonHeld,
   useButtonPressed,
+  mouseButton,
 } from 'use-control'
 
 const inputMap = {
   buttons: {
-    left: [keycode(KEYS.left_arrow), keycode(KEYS.a), gamepadButton(0, GAMEPADS.XBOX_ONE.D_LEFT)],
+    left: [
+      keycode(KEYS.left_arrow),
+      mouseButton('left'),
+      keycode(KEYS.a),
+      gamepadButton(0, GAMEPADS.XBOX_ONE.D_LEFT),
+    ],
     right: [
       keycode(KEYS.right_arrow),
       keycode(KEYS.d),
+      mouseButton('right'),
       gamepadButton(0, GAMEPADS.XBOX_ONE.D_RIGHT),
     ],
-    up: [keycode(KEYS.up_arrow), keycode(KEYS.w), gamepadButton(0, GAMEPADS.XBOX_ONE.D_UP)],
+    up: [
+      keycode(KEYS.up_arrow),
+      mouseButton('middle'),
+      keycode(KEYS.w),
+      gamepadButton(0, GAMEPADS.XBOX_ONE.D_UP),
+    ],
     down: [keycode(KEYS.down_arrow), keycode(KEYS.s), gamepadButton(0, GAMEPADS.XBOX_ONE.D_DOWN)],
     count: [keycode(KEYS.space)],
   },

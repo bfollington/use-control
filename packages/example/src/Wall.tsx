@@ -1,14 +1,15 @@
-import { KEYS, useActionHeld, useActionPressed, useMouseMoveNormalised } from 'use-control'
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useRef } from 'react'
+import {
+  gamepadAxis,
+  gamepadButton,
+  keycode,
+  KEYS,
+  mouseAxis,
+  useAxis,
+  useButtonHeld,
+  useButtonPressed,
+} from 'use-control'
 import { useGamepadAxis, useGamepadButtonPressed } from './gamepad'
-
-function keycode(code: number) {
-  return { type: 'keycode', code }
-}
-
-function gamepadButton(index: number, code: number) {
-  return { type: 'gamepad', index, code }
-}
 
 const XBOX_ONE = {
   D_LEFT: 14,
@@ -21,7 +22,7 @@ const XBOX_ONE = {
   STICK_R_Y: 3,
 }
 
-const inputMap = {
+const inputMap_old = {
   left: [KEYS.left_arrow, KEYS.a],
   right: [KEYS.right_arrow, KEYS.d],
   up: [KEYS.up_arrow, KEYS.w],
@@ -29,12 +30,18 @@ const inputMap = {
   count: [KEYS.space],
 }
 
-const inputMap2 = {
-  left: [keycode(KEYS.left_arrow), keycode(KEYS.a), gamepadButton(0, XBOX_ONE.D_LEFT)],
-  right: [keycode(KEYS.right_arrow), keycode(KEYS.d), gamepadButton(0, XBOX_ONE.D_RIGHT)],
-  up: [keycode(KEYS.up_arrow), keycode(KEYS.w), gamepadButton(0, XBOX_ONE.D_UP)],
-  down: [keycode(KEYS.down_arrow), keycode(KEYS.s), gamepadButton(0, XBOX_ONE.D_DOWN)],
-  count: [keycode(KEYS.space)],
+const inputMap = {
+  buttons: {
+    left: [keycode(KEYS.left_arrow), keycode(KEYS.a), gamepadButton(0, XBOX_ONE.D_LEFT)],
+    right: [keycode(KEYS.right_arrow), keycode(KEYS.d), gamepadButton(0, XBOX_ONE.D_RIGHT)],
+    up: [keycode(KEYS.up_arrow), keycode(KEYS.w), gamepadButton(0, XBOX_ONE.D_UP)],
+    down: [keycode(KEYS.down_arrow), keycode(KEYS.s), gamepadButton(0, XBOX_ONE.D_DOWN)],
+    count: [keycode(KEYS.space)],
+  },
+  axes: {
+    x: [mouseAxis('x'), gamepadAxis(0, XBOX_ONE.STICK_R_X)],
+    y: [mouseAxis('y'), gamepadAxis(0, XBOX_ONE.STICK_R_Y)],
+  },
 }
 
 function modify<T>(val: MutableRefObject<T> | undefined, sink: (v: T) => void) {
@@ -52,37 +59,37 @@ export default function Wall(props: any) {
     })
   })
 
-  useGamepadAxis(0, XBOX_ONE.STICK_R_X, (v) => {
+  useAxis(inputMap, 'x', (v) => {
     modify<any>(mesh, (m) => {
       m.rotation.x = v * Math.PI * 2
     })
   })
 
-  useGamepadAxis(0, XBOX_ONE.STICK_R_Y, (v) => {
+  useAxis(inputMap, 'y', (v) => {
     modify<any>(mesh, (m) => {
       m.rotation.y = v * Math.PI * 2
     })
   })
 
-  useActionPressed(inputMap, 'left', () => {
+  useButtonPressed(inputMap, 'left', () => {
     modify<any>(mesh, (m) => {
       m.scale.x -= 0.1
     })
   })
 
-  useActionPressed(inputMap, 'right', () => {
+  useButtonPressed(inputMap, 'right', () => {
     modify<any>(mesh, (m) => {
       m.scale.x += 0.1
     })
   })
 
-  useActionHeld(inputMap, 'up', 50, () => {
+  useButtonHeld(inputMap, 'up', 50, () => {
     modify<any>(mesh, (m) => {
       m.scale.y += 0.05
     })
   })
 
-  useActionHeld(inputMap, 'down', 50, () => {
+  useButtonHeld(inputMap, 'down', 50, () => {
     modify<any>(mesh, (m) => {
       m.scale.y -= 0.05
     })

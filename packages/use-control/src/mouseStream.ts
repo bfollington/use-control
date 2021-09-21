@@ -1,24 +1,61 @@
-import React from "react"
-import { fromEvent, identity } from "rxjs"
-import { map, pairwise, sampleTime, share } from "rxjs/operators"
+import React from 'react'
+import { fromEvent, identity } from 'rxjs'
+import { distinctUntilChanged, map, pairwise, sampleTime, share } from 'rxjs/operators'
 
-export const mousemove$ = fromEvent<MouseEvent>(document, "mousemove").pipe(
+const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(share())
+
+export const mousePos$ = mouseMove$.pipe(
   map((ev: MouseEvent) => [ev.clientX, ev.clientY]),
-  share(),
+  distinctUntilChanged(),
+  share()
 )
-export const mousemovedelta$ = mousemove$.pipe(
+export const mousePosDelta$ = mousePos$.pipe(
   pairwise(),
   map(([[ax, ay], [bx, by]]) => [bx - ax, by - ay]),
-  share(),
+  share()
 )
-export const mousemovenormalised$ = mousemove$.pipe(
-  map(([x, y]) => [x / document.documentElement.clientWidth, y / document.documentElement.clientHeight]),
-  share(),
+export const mousePosNormalised$ = mousePos$.pipe(
+  map(([x, y]) => [
+    x / document.documentElement.clientWidth,
+    y / document.documentElement.clientHeight,
+  ]),
+  share()
+)
+
+// axis isolated streams
+export const mousePosX$ = mouseMove$.pipe(
+  map((ev: MouseEvent) => ev.clientX),
+  distinctUntilChanged(),
+  share()
+)
+export const mousePosDeltaX$ = mousePosX$.pipe(
+  pairwise(),
+  map(([ax, bx]) => bx - ax),
+  share()
+)
+export const mousePosNormalisedX$ = mousePosX$.pipe(
+  map((x) => x / document.documentElement.clientWidth),
+  share()
+)
+
+export const mousePosY$ = mouseMove$.pipe(
+  map((ev: MouseEvent) => ev.clientY),
+  distinctUntilChanged(),
+  share()
+)
+export const mousePosDeltaY$ = mousePosY$.pipe(
+  pairwise(),
+  map(([ay, by]) => by - ay),
+  share()
+)
+export const mousePosNormalisedY$ = mousePosY$.pipe(
+  map((y) => y / document.documentElement.clientHeight),
+  share()
 )
 
 export function useMouseMove(sink: (p: number[]) => void, throttleMs?: number) {
   React.useEffect(() => {
-    const s = mousemove$.pipe(throttleMs ? sampleTime(throttleMs || 0) : identity).subscribe(sink)
+    const s = mousePos$.pipe(throttleMs ? sampleTime(throttleMs || 0) : identity).subscribe(sink)
 
     return () => s.unsubscribe()
   }, [sink, throttleMs])
@@ -26,10 +63,13 @@ export function useMouseMove(sink: (p: number[]) => void, throttleMs?: number) {
 
 export function useMouseMoveNormalised(sink: (p: number[]) => void, throttleMs?: number) {
   React.useEffect(() => {
-    const s = mousemove$
+    const s = mousePos$
       .pipe(
         throttleMs ? sampleTime(throttleMs || 0) : identity,
-        map(([x, y]) => [x / document.documentElement.clientWidth, y / document.documentElement.clientHeight]),
+        map(([x, y]) => [
+          x / document.documentElement.clientWidth,
+          y / document.documentElement.clientHeight,
+        ])
       )
       .subscribe(sink)
 
@@ -39,7 +79,9 @@ export function useMouseMoveNormalised(sink: (p: number[]) => void, throttleMs?:
 
 export function useMouseDelta(sink: (d: number[]) => void, throttleMs?: number) {
   React.useEffect(() => {
-    const s = mousemovedelta$.pipe(throttleMs ? sampleTime(throttleMs || 0) : identity).subscribe(sink)
+    const s = mousePosDelta$
+      .pipe(throttleMs ? sampleTime(throttleMs || 0) : identity)
+      .subscribe(sink)
 
     return () => s.unsubscribe()
   }, [sink, throttleMs])

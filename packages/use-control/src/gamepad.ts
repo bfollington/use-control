@@ -3,11 +3,11 @@ import { Subject } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 
 let buttonCache: { [idx: number]: GamepadButton[] } = {}
-let poll: NodeJS.Timeout
-let presses$ = new Subject<GamepadAction>()
-let held$ = new Subject<GamepadAction>()
-let releases$ = new Subject<GamepadAction>()
-let axes$ = new Subject<GamepadAxisReading>()
+let poll: number
+export const presses$ = new Subject<GamepadAction>()
+export const held$ = new Subject<GamepadAction>()
+export const releases$ = new Subject<GamepadAction>()
+export const axes$ = new Subject<GamepadAxisReading>()
 
 type GamepadAction = {
   controllerIndex: number
@@ -22,6 +22,8 @@ type GamepadAxisReading = {
 
 // TODO(ben): consider using an interval() stream for the tick
 export function init(pollIntervalMs: number = 1000 / 60) {
+  if (poll) clearInterval(poll)
+
   poll = setInterval(() => {
     const gamepads: Gamepad[] = navigator.getGamepads
       ? navigator.getGamepads()

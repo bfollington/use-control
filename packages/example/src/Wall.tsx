@@ -52,13 +52,13 @@ export default function Wall(props: any) {
 
   useAxis(inputMap, 'x', (v) => {
     modify<any>(mesh, (m) => {
-      m.rotation.x = v * Math.PI * 2
+      m.rotation.x = v * Math.PI
     })
   })
 
   useAxis(inputMap, 'y', (v) => {
     modify<any>(mesh, (m) => {
-      m.rotation.y = v * Math.PI * 2
+      m.rotation.y = v * Math.PI
     })
   })
 
@@ -85,13 +85,6 @@ export default function Wall(props: any) {
       m.scale.y -= 0.05
     })
   })
-
-  // useMouseMoveNormalised(([x, y]) => {
-  //   modify<any>(mesh, (m) => {
-  //     m.rotation.x = x * Math.PI * 2
-  //     m.rotation.y = y * Math.PI * 2
-  //   })
-  // }, 1000 / 30)
 
   return (
     <group {...props}>

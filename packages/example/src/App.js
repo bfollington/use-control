@@ -2,9 +2,9 @@ import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import Wall from './Wall'
-import { gamepadInit } from 'use-control'
+import { initGamepad } from 'use-control'
 
-gamepadInit()
+initGamepad()
 
 export default function App() {
   return (

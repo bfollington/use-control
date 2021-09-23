@@ -9,32 +9,18 @@ import {
   useButtonPressed,
   useButtonReleased,
 } from './actions'
-import GAMEPADS from './gamepads'
-import { init, teardown, useGamepadAxis, useGamepadButtonPressed } from './gamepadStream'
-import KEYS from './keys'
-import { useKeyDown, useKeyHeld, useKeyUp } from './keyStream'
-import { useMouseDelta, useMouseMove, useMouseMoveNormalised } from './mouseStream'
+import { initGamepad, teardownGamepad } from './input/gamepad'
 
 export {
-  useMouseDelta as useMouseDelta,
-  useMouseMove as useMouseMove,
-  useMouseMoveNormalised as useMouseMoveNormalised,
   useButtonHeld as useButtonHeld,
   useButtonPressed as useButtonPressed,
   useButtonReleased as useButtonReleased,
   useAxis as useAxis,
-  useKeyDown as useKetDown,
-  useKeyUp as useKeyUp,
-  useKeyHeld as useKeyHeld,
-  init as gamepadInit,
-  teardown as gamepadTeardown,
-  useGamepadAxis as useGamepadAxis,
-  useGamepadButtonPressed as useGamepadButtonPressed,
+  initGamepad as initGamepad,
+  teardownGamepad as teardownGamepad,
   keycode as keycode,
   gamepadAxis as gamepadAxis,
   gamepadButton as gamepadButton,
   mouseAxis as mouseAxis,
   mouseButton as mouseButton,
-  KEYS as KEYS,
-  GAMEPADS as GAMEPADS,
 }

@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { EMPTY, fromEvent, interval, merge } from 'rxjs'
 import { distinctUntilChanged, filter, groupBy, map, mergeAll, switchMap } from 'rxjs/operators'
 
-export const keydown$ = fromEvent<KeyboardEvent>(document, 'keydown')
-export const keyup$ = fromEvent<KeyboardEvent>(document, 'keyup')
-export const key$ = merge(keydown$, keyup$).pipe(
+export const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown')
+export const keyUp$ = fromEvent<KeyboardEvent>(document, 'keyup')
+
+export const keyEvents$ = merge(keyDown$, keyUp$).pipe(
   groupBy((e: KeyboardEvent) => e.keyCode),
   map((group: any) =>
     group.pipe(
@@ -19,7 +20,7 @@ export const key$ = merge(keydown$, keyup$).pipe(
 
 function useKeyEvents(key: number, eventType: string, sink: () => void) {
   useEffect(() => {
-    const s = key$
+    const s = keyEvents$
       .pipe(
         filter(
           (ev) =>
@@ -43,7 +44,7 @@ export function useKeyUp(key: number, sink: () => void) {
 
 export function useKeyHeld(key: number, intervalMs: number, sink: () => void) {
   useEffect(() => {
-    const s = key$
+    const s = keyEvents$
       .pipe(
         filter((ev) => (ev as KeyboardEvent).keyCode === key),
         switchMap((ev) => {

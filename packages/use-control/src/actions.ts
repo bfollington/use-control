@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { EMPTY, interval, merge } from 'rxjs'
 import { distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators'
-import { axes$, presses$, releases$ } from './gamepadStream'
-import { key$ } from './keyStream'
+import { gamepadAxes$, gamepadButtonPress$, gamepadButtonReleased$ } from './input/gamepad'
+import { keyEvents$ } from './input/keyboard'
 import {
   MouseButton,
   mouseDown$,
@@ -10,7 +10,7 @@ import {
   mousePosNormalisedY$,
   mouseUp$,
   whichButtonPressed,
-} from './mouseStream'
+} from './input/mouse'
 
 export function mouseButton(button: MouseButton) {
   return { type: 'mouse-button', button } as const
@@ -53,13 +53,13 @@ function buildStream<T extends InputMap>(
     ...keys.map((k) => {
       switch (k.type) {
         case 'gamepad-button':
-          const s = eventType === 'down' ? presses$ : releases$
+          const s = eventType === 'down' ? gamepadButtonPress$ : gamepadButtonReleased$
           return s.pipe(
             filter((p) => p.buttonIndex === k.code && p.controllerIndex === k.controllerIndex)
           )
         case 'keycode-button':
           const keyboardEventType = eventType === 'down' ? 'keydown' : 'keyup'
-          return key$.pipe(
+          return keyEvents$.pipe(
             filter(
               (ev) =>
                 k.code === (ev as KeyboardEvent).keyCode &&
@@ -75,7 +75,7 @@ function buildStream<T extends InputMap>(
   )
 }
 
-function useKeycodeEvents<T extends InputMap>(
+function useButtonEvents<T extends InputMap>(
   eventType: ButtonEventType,
   inputMap: T,
   key: keyof T['buttons'],
@@ -94,7 +94,7 @@ export function useButtonPressed<T extends InputMap>(
   key: keyof T['buttons'],
   sink: () => void
 ) {
-  useKeycodeEvents('down', inputMap, key, sink)
+  useButtonEvents('down', inputMap, key, sink)
 }
 
 export function useButtonReleased<T extends InputMap>(
@@ -102,7 +102,7 @@ export function useButtonReleased<T extends InputMap>(
   key: keyof T['buttons'],
   sink: () => void
 ) {
-  useKeycodeEvents('up', inputMap, key, sink)
+  useButtonEvents('up', inputMap, key, sink)
 }
 
 export function useButtonHeld<T extends InputMap>(
@@ -147,7 +147,7 @@ export function useAxis<T extends InputMap>(
       ...axes.map((a) => {
         switch (a.type) {
           case 'gamepad-axis':
-            return axes$.pipe(
+            return gamepadAxes$.pipe(
               filter(
                 (p) =>
                   p.axisIndex === a.axis &&

@@ -46,6 +46,7 @@ export const mousePosNormalised$ = mousePos$.pipe(
 )
 
 // axis isolated streams
+// X
 export const mousePosX$ = mouseMove$.pipe(
   map((ev: MouseEvent) => ev.clientX),
   distinctUntilChanged(),
@@ -61,6 +62,7 @@ export const mousePosNormalisedX$ = mousePosX$.pipe(
   share()
 )
 
+// Y
 export const mousePosY$ = mouseMove$.pipe(
   map((ev: MouseEvent) => ev.clientY),
   distinctUntilChanged(),

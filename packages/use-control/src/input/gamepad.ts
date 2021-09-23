@@ -4,10 +4,10 @@ import { filter, map } from 'rxjs/operators'
 
 let buttonCache: { [idx: number]: GamepadButton[] } = {}
 let poll: number
-export const presses$ = new Subject<GamepadAction>()
-export const held$ = new Subject<GamepadAction>()
-export const releases$ = new Subject<GamepadAction>()
-export const axes$ = new Subject<GamepadAxisReading>()
+export const gamepadButtonPress$ = new Subject<GamepadAction>()
+export const gamepadButtonHeld$ = new Subject<GamepadAction>()
+export const gamepadButtonReleased$ = new Subject<GamepadAction>()
+export const gamepadAxes$ = new Subject<GamepadAxisReading>()
 
 type GamepadAction = {
   controllerIndex: number
@@ -21,7 +21,8 @@ type GamepadAxisReading = {
 }
 
 // TODO(ben): consider using an interval() stream for the tick
-export function init(pollIntervalMs: number = 1000 / 60) {
+export function initGamepad(pollIntervalMs: number = 1000 / 60) {
+  // makes init idempotent
   if (poll) clearInterval(poll)
 
   poll = setInterval(() => {
@@ -39,15 +40,16 @@ export function init(pollIntervalMs: number = 1000 / 60) {
           const cachedBtn = buttonCache?.[ctrlIdx]?.[btnIdx] || {}
 
           if (btn.pressed) {
-            held$.next({ controllerIndex: 0, buttonIndex: btnIdx })
+            // TODO(ben): technically speaking this isn't used, we actually handle "held" through the higher level hook useButtonHeld
+            gamepadButtonHeld$.next({ controllerIndex: 0, buttonIndex: btnIdx })
           }
 
           if (!btn.pressed && cachedBtn.pressed) {
-            releases$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
+            gamepadButtonReleased$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
           }
 
           if (btn.pressed && !cachedBtn.pressed) {
-            presses$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
+            gamepadButtonPress$.next({ controllerIndex: ctrlIdx, buttonIndex: btnIdx })
           }
         }
 
@@ -55,14 +57,14 @@ export function init(pollIntervalMs: number = 1000 / 60) {
 
         for (let axisIdx = 0; axisIdx < gamepads[ctrlIdx].axes.length; axisIdx++) {
           const axis = gamepads[ctrlIdx].axes[axisIdx]
-          axes$.next({ controllerIndex: ctrlIdx, axisIndex: axisIdx, value: axis })
+          gamepadAxes$.next({ controllerIndex: ctrlIdx, axisIndex: axisIdx, value: axis })
         }
       }
     }
   }, pollIntervalMs)
 }
 
-export function teardown() {
+export function teardownGamepad() {
   clearInterval(poll)
 }
 
@@ -72,7 +74,7 @@ export function useGamepadButtonPressed(
   sink: () => void
 ) {
   useEffect(() => {
-    const sub = presses$
+    const sub = gamepadButtonPress$
       .pipe(filter((p) => p.buttonIndex === buttonIndex && p.controllerIndex === controllerIndex))
       .subscribe(sink)
 
@@ -86,7 +88,7 @@ export function useGamepadAxis(
   sink: (v: number) => void
 ) {
   useEffect(() => {
-    const sub = axes$
+    const sub = gamepadAxes$
       .pipe(
         filter((p) => p.axisIndex === axisIndex && p.controllerIndex === controllerIndex),
         map((p) => p.value)

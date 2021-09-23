@@ -3,14 +3,15 @@ import {
   gamepadAxis,
   gamepadButton,
   keycode,
-  KEYS,
-  GAMEPADS,
   mouseAxis,
   useAxis,
   useButtonHeld,
   useButtonPressed,
   mouseButton,
 } from 'use-control'
+
+import GAMEPADS from 'use-control/lib/definitions/gamepads'
+import KEYS from 'use-control/lib/definitions/keys'
 
 const inputMap = {
   buttons: {

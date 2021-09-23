@@ -152,7 +152,7 @@ export function useAxis<T extends InputMap>(
                 (p) =>
                   p.axisIndex === a.axis &&
                   p.controllerIndex === a.controllerIndex &&
-                  p.value > a.threshold
+                  Math.abs(p.value) > a.threshold
               ),
               map((p) => p.value)
             )

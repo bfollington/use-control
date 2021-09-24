@@ -28,9 +28,11 @@
     "lint": "eslint src/ --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
-  "peerDependencies": {
-    "react": "^15.0.0 || ^16.0.0 || ^17.0.0",
+  "dependencies": {
     "rxjs": "^6.6.0"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",

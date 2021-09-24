@@ -1,12 +1,45 @@
-import { KEYS, useActionHeld, useActionPressed, useMouseMoveNormalised } from 'use-control'
 import React, { MutableRefObject, useRef } from 'react'
+import {
+  gamepadAxis,
+  gamepadButton,
+  keycode,
+  mouseAxis,
+  useAxis,
+  useButtonHeld,
+  useButtonPressed,
+  mouseButton,
+} from 'use-control'
+
+import GAMEPADS from 'use-control/lib/definitions/gamepads'
+import KEYS from 'use-control/lib/definitions/keys'
 
 const inputMap = {
-  left: [KEYS.left_arrow, KEYS.a],
-  right: [KEYS.right_arrow, KEYS.d],
-  up: [KEYS.up_arrow, KEYS.w],
-  down: [KEYS.down_arrow, KEYS.s],
-  count: [KEYS.space],
+  buttons: {
+    left: [
+      keycode(KEYS.left_arrow),
+      mouseButton('left'),
+      keycode(KEYS.a),
+      gamepadButton(0, GAMEPADS.XBOX_ONE.D_LEFT),
+    ],
+    right: [
+      keycode(KEYS.right_arrow),
+      keycode(KEYS.d),
+      mouseButton('right'),
+      gamepadButton(0, GAMEPADS.XBOX_ONE.D_RIGHT),
+    ],
+    up: [
+      keycode(KEYS.up_arrow),
+      mouseButton('middle'),
+      keycode(KEYS.w),
+      gamepadButton(0, GAMEPADS.XBOX_ONE.D_UP),
+    ],
+    down: [keycode(KEYS.down_arrow), keycode(KEYS.s), gamepadButton(0, GAMEPADS.XBOX_ONE.D_DOWN)],
+    count: [keycode(KEYS.space)],
+  },
+  axes: {
+    x: [mouseAxis('x'), gamepadAxis(0, GAMEPADS.XBOX_ONE.STICK_R_X)],
+    y: [mouseAxis('y'), gamepadAxis(0, GAMEPADS.XBOX_ONE.STICK_R_Y)],
+  },
 }
 
 function modify<T>(val: MutableRefObject<T> | undefined, sink: (v: T) => void) {
@@ -18,37 +51,41 @@ function modify<T>(val: MutableRefObject<T> | undefined, sink: (v: T) => void) {
 export default function Wall(props: any) {
   const mesh = useRef()
 
-  useActionPressed(inputMap, 'left', () => {
+  useAxis(inputMap, 'x', (v) => {
+    modify<any>(mesh, (m) => {
+      m.rotation.x = v * Math.PI
+    })
+  })
+
+  useAxis(inputMap, 'y', (v) => {
+    modify<any>(mesh, (m) => {
+      m.rotation.y = v * Math.PI
+    })
+  })
+
+  useButtonPressed(inputMap, 'left', () => {
     modify<any>(mesh, (m) => {
       m.scale.x -= 0.1
     })
   })
 
-  useActionPressed(inputMap, 'right', () => {
+  useButtonPressed(inputMap, 'right', () => {
     modify<any>(mesh, (m) => {
       m.scale.x += 0.1
     })
   })
 
-  useActionHeld(inputMap, 'up', 50, () => {
+  useButtonHeld(inputMap, 'up', 50, () => {
     modify<any>(mesh, (m) => {
       m.scale.y += 0.05
     })
   })
 
-  useActionHeld(inputMap, 'down', 50, () => {
+  useButtonHeld(inputMap, 'down', 50, () => {
     modify<any>(mesh, (m) => {
       m.scale.y -= 0.05
     })
   })
-
-  useMouseMoveNormalised(([x, y]) => {
-    console.log('mouse', x, y)
-    modify<any>(mesh, (m) => {
-      m.rotation.x = x * Math.PI * 2
-      m.rotation.y = y * Math.PI * 2
-    })
-  }, 1000 / 30)
 
   return (
     <group {...props}>

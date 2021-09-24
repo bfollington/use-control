@@ -77,6 +77,13 @@ Check out the <a href="https://github.com/bfollington/use-control/tree/main/pack
 
 # API Overview
 
+## Boostrap
+
+If you want to use gamepad input you'll need to attach the listeners when your app starts up, this probably means you want to call `gamepadInit` once in `index.js` or `App.js` but you can turn the feature on and off at your leisure.
+
+- `gamepadInit()`
+- `gamepadTeardown()`
+
 ## Hooks
 
 - `useButtonPressed(inputMap, actionName, callback)`

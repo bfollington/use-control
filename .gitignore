@@ -25,3 +25,4 @@ yarn-error.log*
 packages/furo/lib
 packages/example/build
 packages/use-control/lib
+packages/use-control/README.md

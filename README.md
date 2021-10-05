@@ -9,7 +9,7 @@
 ![Bundle Size](https://img.shields.io/bundlephobia/min/use-control?style=flat&colorA=000000&colorB=000000)
 [![Build](https://github.com/bfollington/use-control/workflows/Build/badge.svg)](https://github.com/bfollington/use-control/actions?query=workflow%3A%22Build%22)
 
-<p><strong>use-control</strong> is an elegant, typesafe input management system for React supporting keyboard, mouse and gamepad (soon).</p>
+<p>⌨️🖱🎮 <strong>use-control</strong> is an elegant, typesafe input management system for React supporting keyboard, mouse and gamepad.</p>
   
 <p><a href="https://use-control.vercel.app/">👁 &nbsp;Live Demo</a> (source in <a href="https://github.com/bfollington/use-control/tree/main/packages/example"><code>packages/example</code></a>)</p>
 
